@@ -3,9 +3,64 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.naver.cafe.BoardMapper">
+
+	<update id="updateBoard" parameterType="com.naver.cafe.service.Board">
+		UPDATE board SET 
+			board_title=#{boardTitle}, board_content=#{boardContent} 
+		WHERE board_no=#{boardNo} AND board_pw=#{boardPw};
+	</update>
+
+
+	<delete id="deleteBoard" parameterType="com.naver.cafe.service.Board" >
+		DELETE FROM board 
+		WHERE board_no=#{boardNo} AND board_pw= #{boardPw}
+	</delete>
+	
+	<select id="selectBoardByKey" parameterType="int" resultType="com.naver.cafe.service.Board">
+		SELECT
+			 board_no as boardNo, 
+			 board_title as boardTitle, 
+			 board_content as boardContent, 
+			 board_user as boardUser, 
+			 board_date as boardDate  
+		FROM board 
+		WHERE board_no=#{boardNo}
+	</select>
+	
+	
+	<select id="selectTotalBoardCount" resultType="int">
+		SELECT
+			 COUNT(*)
+		FROM board
+	</select>
+	
+	<select id="selectBoardListPerPage" 
+			parameterType="Map" 
+			resultType="com.naver.cafe.service.Board">
+		SELECT
+			 board_no as boardNo, 
+			 board_title as boardTitle, 
+			 board_user as boardUser, 
+			 board_date as boardDate 
+		FROM board 
+		ORDER BY board_date DESC 
+		LIMIT #{beginRow}, #{pagePerRow}
+	</select>
+	
 	<insert id="boardAdd" parameterType="com.naver.cafe.service.Board">
-			INSERT INTO board(board_pw, board_title, board_content, board_user, board_date) 
-			VALUES(#{boardPw},#{boardTitle},#{boardContent},#{boardUser},now())
+			INSERT INTO board(
+				board_pw, 
+				board_title, 
+				board_content, 
+				board_user, 
+				board_date) 
+			VALUES(
+				#{boardPw},
+				#{boardTitle},
+				#{boardContent},
+				#{boardUser},
+				now()
+			)
 	</insert>
 </mapper>
 
